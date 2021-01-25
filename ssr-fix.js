@@ -18,19 +18,22 @@ function writeTextFile(filePath, data) {
     });
 }
 
+// for main.js file
 function getMainFileWrapper(fileContent) {
     return `
         const zoneLib = require('zone.js/dist/zone-node');
         const domino = require('domino');
         const fs = require('fs');
-        // Use the browser index.html as template for the mock window
+
+        // Add a template for the window mock
         const template = fs
-            .readFileSync('C:/work/test-ui-project.front/dist/test-ui-project-ui/browser/index.html')
+            .readFileSync('C:/work/test-project.front/dist/test-ui-project-ui/browser/index.html')
             .toString();
-        // Shim for the global window and document objects.
+
         const fakeWindow = domino.createWindow(template);
         global['window'] = fakeWindow;
         global['document'] = fakeWindow.document;
+
         let SVG = require('./svg.js/dist/svg');
         const extraFunc = {
             invent: function(config) {},
@@ -50,8 +53,9 @@ function getMainFileWrapper(fileContent) {
                 defaults: Object.create(null)
             }
         };
+
         (function(window, Zone, SVG){
-            ${fileContent}
+        ${fileContent}
         }(fakeWindow, Zone, SVG))
     `;
 }
